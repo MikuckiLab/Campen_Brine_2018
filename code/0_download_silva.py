@@ -1,4 +1,4 @@
-# Campen et al. 2018
+# Campen_Brine_2018
 # 0_download_silva.py
 
 """
@@ -25,8 +25,6 @@ data_dir = os.path.join(base_dir, 'data')
 silva_dir = os.path.join(data_dir, 'silva')
 if not os.path.isdir(silva_dir):
 	os.mkdir(silva_dir)
-
-results_dir = os.path.join(base_dir, 'results')
 
 # configure path to mothur executeable
 # some example paths provided

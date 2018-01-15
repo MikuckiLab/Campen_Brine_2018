@@ -1,5 +1,5 @@
-# This_Is_Outflow
-# 1_sequence_processing
+# Campen_Brine_2018
+# 1_process_sequences
 
 """
 This file deals with the sequencing processing of samples for characterising
@@ -54,9 +54,9 @@ tmp_dir =  os.path.join(data_dir, 'tmp')
 if not os.path.isdir(tmp_dir):
 	os.mkdir(tmp_dir)
 
-process_sequences_dir = os.path.join(tmp_dir, '1_process_sequences_dir')
-if not os.path.isdir(process_sequences_dir):
-	os.mkdir(process_sequences_dir)
+mothur_out_dir = os.path.join(tmp_dir, '1_process_sequences')
+if not os.path.isdir(mothur_out_dir):
+	os.mkdir(mothur_out_dir)
 
 #========== Mothur Setup ==========#
 
@@ -71,22 +71,7 @@ m = Mothur()
 m.verbosity = 1
 m.suppress_logfile = True
 m.mothur_seed = 4321
-
-# save all output into a sub directory called 'output'; makes cleaning up the working environment much easier
-m.current_dirs['output'] = os.path.join(
-	process_sequences_dir,
-	'output'
-)
-if not os.path.isdir(m.current_dirs['output']):
-    os.mkdir(m.current_dirs['output'])
-
-# save all temp files into a sub directory called 'tmp'; makes cleaning up the working environment much easier
-m.current_dirs['tempdefault'] = os.path.join(
-	process_sequences_dir,
-	'tmp'
-)
-if not os.path.isdir(m.current_dirs['tempdefault']):
-    os.mkdir(m.current_dirs['tempdefault'])
+m.current_dirs['output'] = m.current_dirs['tempdefault'] = mothur_out_dir
 
 # setup other variables for mothur execution
 mothur_vars = {
@@ -141,7 +126,7 @@ for read in ['R1', 'R2']:
                 
 # tidy up df and write out to file
 seq_files_df = seq_files_df.drop('seq_id', axis=1).reset_index()
-files_file = os.path.join(process_sequences_dir, 'TIO.files')
+files_file = os.path.join(mothur_out_dir, 'TIO.files')
 seq_files_df.to_csv(files_file, sep='\t' , header=False , index=False)
 
 #========== Sequence Processing ==========#
