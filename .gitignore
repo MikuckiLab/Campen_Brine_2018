@@ -1,1 +1,7 @@
-#
+# ignore mothur log files
+*.logfile
+
+# ignore directories
+data/raw_seqs/
+data/silva/
+data/tmp/
