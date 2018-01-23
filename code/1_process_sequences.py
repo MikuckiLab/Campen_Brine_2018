@@ -14,11 +14,13 @@ To run this analysis you will require:
 * Mothur executable
 * Uchime executable (included with mothur)
 * Raw fastq sequence files
+* sample metadata file
 
 Additionally you will need the following, and to specify their location in 
 the mothur_vars dictionary below.
 
 * Mothur compatible SILVA reference alignment
+* Oligos file specifying primer sequences
 * Mock community referece fasta file
 
 This notebook was run with Mothur version 1.39.5.
@@ -33,22 +35,20 @@ import shutil
 
 import numpy as np
 import pandas as pd
-import seq_experiment as se
-
-import matplotlib
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 from mothur_py import Mothur
 
 
-# configure directories
+# setup directories
+# NOTE: assumes code is being run from the code directory
 base_dir = os.path.join('..')
 base_dir = os.path.abspath(base_dir)
 data_dir = os.path.join(base_dir, 'data')
 
 processed_dir = os.path.join(data_dir, 'processed')
 results_dir = os.path.join(base_dir, 'results')
+
+#========== Mothur Setup ==========#
 
 tmp_dir =  os.path.join(data_dir, 'tmp')
 if not os.path.isdir(tmp_dir):
@@ -57,8 +57,6 @@ if not os.path.isdir(tmp_dir):
 mothur_out_dir = os.path.join(tmp_dir, '1_process_sequences')
 if not os.path.isdir(mothur_out_dir):
 	os.mkdir(mothur_out_dir)
-
-#========== Mothur Setup ==========#
 
 # flag whether to assess error rate or not
 # NOTE:: if True, this version of mothur will crash. This does not prevent

@@ -17,7 +17,8 @@ import wget
 
 from mothur_py import Mothur
 
-# configure directories
+# setup directories
+# NOTE: assumes code is being run from the code directory
 base_dir = os.path.join('..')
 base_dir = os.path.abspath(base_dir)
 data_dir = os.path.join(base_dir, 'data')
