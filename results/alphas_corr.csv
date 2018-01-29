@@ -1,9 +1,0 @@
-"Spearman's correlations (rho) between the number of sequences and alpha diversity metrics for BloodFalls and West lobe Lake Bonnery samples:"
-,All,Prokaryotes
-Number OTUs,0.865***,0.930***
-Shannon,-0.091,-0.084
-Simpson,0.208,0.201
-Hills q=1,-0.091,-0.084
-Hills q=2,-0.189,-0.231
-
-"Significance levels are indicated by stars as follows: ***, p < 0.001; **, p < 0.05; *, p < 0.05"

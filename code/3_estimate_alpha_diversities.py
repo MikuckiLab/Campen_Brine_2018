@@ -72,10 +72,6 @@ sxp.metadata['date'] =  pd.to_datetime(sxp.metadata['date'])
 # remove OTUs classified as unknown from the SeqExp
 sxp = sxp.drop(by='features', items=sxp[sxp.classifications['Kingdom'] == 'unknown'].feature_names)
 
-# drop unwated samples and then drop features that are absent from all samples
-sxp = sxp.drop(by='samples', items=sxp.loc[:, sxp.metadata['type'].isin(['Mock', 'Negative'])].sample_names)
-sxp = sxp.loc[sxp.features.max(axis=1) > 0]
-
 # rename OTUs of Class Chloroplast to Phylum Chloroplast so it is more apparant what they are, 
 # instead of grouping them under cyannobacteria
 new_classifications = sxp.classifications
@@ -107,9 +103,7 @@ def replace_tax(column, match, replace):
 sxp.classifications.apply(lambda col: replace_tax(col, 'Woesearchaeota_(DHVEG-6)', 'DHVE6'))
 
 # generate prokaryote only subset sequence data
-sxp_prok = deepcopy(sxp)
-sxp_prok = sxp_prok.loc[sxp.classifications['Kingdom'] != 'Eukaryota']
-sxp_prok = sxp_prok.loc[sxp.classifications['Class'] != 'Chloroplast']
+sxp_prok = deepcopy(sxp).drop(by='features', items=sxp[sxp.classifications['Kingdom'].isin(['Eukaryota', 'Chloroplast'])].feature_names)
 
 #========== Estimate Alpha Diversity Metrics ==========#
 
@@ -235,155 +229,5 @@ with open(os.path.join(results_dir, 'alphas.csv'), 'w') as out_handle:
     alphas_df.to_csv(out_handle)
 
 alphas_df
-
-#========== Correlate Alpha Diversity Estimates ==========#
-
-def correlate_columns(df, combos=None, round_=3):
-    """Calulcates perasons r and significance for all column combinations in a dataframe."""
-    
-    # get all pairwise combinations to compare id user has not specified
-    if combos is None:
-        combos = list(combinations(df.columns, 2))
-
-    # init results dataframes       
-    index = cols = df.columns
-    data = pd.DataFrame(np.zeros(shape=(len(index), len(cols))), columns=cols, index=index)  # dummy data
-    r_df = data.copy(deep=True)
-    p_df = data.copy(deep=True)
-        
-    # correlate columns, iterating over tuples of column combinations
-    for x_y in combos:
-
-        # combine columns of interest into new pd Dataframe for easy manipulation
-        # drop any samples that don't have both of the parameters being compared
-        compare_df = pd.concat([df[x_y[0]], df[x_y[1]]], axis=1).dropna()
-
-        # calucalte statistics and save to results containers
-        r, p = stats.spearmanr(compare_df.iloc[:,0], compare_df.iloc[:,1])
-        r_df.set_value(x_y[1], x_y[0], r)
-        p_df.set_value(x_y[1], x_y[0], p)
-    
-    return r_df, p_df
-
-def correct_p_vals(df, correction_method='fdr_bh'):
-    """Corrects p-values."""
-    
-    corrected_p = multipletests(df.values.flatten(), method=correction_method)[1]
-    corrected_p_df = np.array(corrected_p).reshape((len(df.index), len(df.columns)))
-    corrected_p_df = pd.DataFrame(corrected_p_df, index=df.index, columns=df.columns)
-    
-    return corrected_p_df
-
-STARS_DICT = OrderedDict([('*', 0.05), ('**', 0.01), ('***', 0.001)])
-
-def add_sig_stars(r_df, p_df, stars_dict=STARS_DICT):
-    """Conditonally adds starts to correlation values to indicate differing levels of significance."""
-
-    new_r_df = r_df.copy(deep=True).astype(str)
-
-    for index, row in r_df.iterrows():
-        for col in row.index:
-            
-            # get values using Decimal to maintain the correct number of decimal places
-            p = p_df.get_value(index, col)
-            r = r_df.get_value(index, col)
-            
-            places = Decimal(10) ** -3 # same as Decimal('0.01')
-            r_str = str(Decimal(r).quantize(places))
-
-            # conditonally add stars to correlation 
-            if p < stars_dict['*']:
-                r_str += '*'
-            if p < stars_dict['**']:
-                r_str += '*'
-            if p < stars_dict['***']:
-                r_str += '*'
-
-            # set new df val
-            new_r_df.set_value(index, col, r_str)
-        
-    return new_r_df
-
-#---------- Correlate with Sequence Counts ----------#
-
-# init restults containers
-groups = ['All', 'Prokaryotes']
-index = alphas_df[groups[0]].columns[1:]
-cols = groups
-data = pd.DataFrame(np.zeros(shape=(len(index), len(cols))), columns=cols, index=index)  # dummy data
-seqs_r = data.copy(deep=True)
-seqs_p = data.copy(deep=True)
-
-# correlate sequence count with OTU number with the other alpha diversity metrics
-for group in groups:
-
-    combos = [('Number Seqs', x) for x in alphas_df[group].columns[1:]]
-
-    # only correlate the actual samples, excluding mock and negative controls
-    otu_seq_r, otu_seq_p = correlate_columns(alphas_df[group].iloc[:12], combos=combos)
-    otu_seq_p = correct_p_vals(otu_seq_p)
-    
-    # save to results containers
-    seqs_r[group] = otu_seq_r
-    seqs_p[group] = otu_seq_p
-    
-# format nicely and save results to file
-seqs_corr_df = add_sig_stars(seqs_r, seqs_p)
-
-with open(os.path.join(results_dir, 'alphas_corr.csv'), 'w') as out_handle:
-    
-    # write out header line
-    out_handle.write('\"Spearman\'s correlations (rho) between the number of sequences and alpha diversity metrics for Blood' +
-                     'Falls and West lobe Lake Bonnery samples:\"\n')
-    
-    # write out data
-    seqs_corr_df.astype(str).to_csv(out_handle)
-    
-    # write out line describing stars
-    out_handle.write('\n\"Significance levels are indicated by stars as follows: ' +
-                     '***, p < %s; **, p < %s; *, p < %s\"\n' % (STARS_DICT['***'], STARS_DICT['*'], STARS_DICT['*'], ))
-    
-#---------- Correlate with geochemical parameters ----------#
-
-# init results container
-geo_alpha_corrs = list()
-
-# get geochem data by itself
-geochem_df = sxp.metadata.iloc[:,4:]
-
-for group in ['All', 'Prokaryotes']:
-    
-    # combine geochemistry and alpha diversity data and get column combinations
-    geo_alpha_all = pd.concat([geochem_df, alphas_df[group]], axis=1)
-    geo_alpha_all_combos = list(product(geochem_df, alphas_df[group]))
-
-    # get correlation and correct p values
-    # NOTE: need to remove unwanted columns from results df's due to the way they're generated
-    geo_alpha_all_r, geo_alpha_all_p = correlate_columns(geo_alpha_all, geo_alpha_all_combos)
-    geo_alpha_all_r = geo_alpha_all_r.loc[alphas_df[group].columns, geochem_df.columns]
-    geo_alpha_all_p = geo_alpha_all_p.loc[alphas_df[group].columns, geochem_df.columns]
-    geo_alpha_all_p = correct_p_vals(geo_alpha_all_p)
-
-    # format results df
-    geo_alpha_all_corr_df = add_sig_stars(geo_alpha_all_r, geo_alpha_all_p)
-    geo_alpha_all_corr_df = geo_alpha_all_corr_df.transpose()
-    geo_alpha_all_corr_df.columns = pd.MultiIndex.from_tuples([(group, column) for column in alphas_df[group].columns])
-    
-    geo_alpha_corrs.append(geo_alpha_all_corr_df)
-    
-# combine results and save to file
-geo_alpha_corrs_df = pd.concat(geo_alpha_corrs, axis=1)
-
-with open(os.path.join(results_dir, 'geochem_alpha_corr.csv'), 'w') as out_handle:
-    # write out header line
-    out_handle.write('\"Spearman\'s correlations (rho) between alpha diversity metrics and geochemical parameters for Blood' +
-                     'Falls and West lobe Lake Bonnery samples:\"\n')
-    
-    # write out data
-    geo_alpha_corrs_df.astype(str).to_csv(out_handle)
-    
-    # write out line describing stars
-    out_handle.write('\n\"Significance levels are indicated by stars as follows: ' +
-                     '***, p < %s; **, p < %s; *, p < %s\"\n' % (STARS_DICT['***'], STARS_DICT['*'], STARS_DICT['*'], ))
 
 #========== END ==========#
