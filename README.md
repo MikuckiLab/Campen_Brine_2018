@@ -2,7 +2,7 @@
 
 ```
 this_is_outflow
-|- README	   			# Top level readme file (this file)
+|- README.md   			# Top level readme file (this file)
 |- .gitignore  				# configuration for git of which files to ignore
 |
 |- data/				# raw and intermediate processed files
@@ -21,7 +21,8 @@ this_is_outflow
 | |- 1_process_sequences.py 		# run mothur sequence processing pipeline (SEE BELOW)
 | |- 2_correlate_geochemistry.py 	# correlate geochemical parameters
 | |- 3_estimate_alpha_diversities.py 	# estimate alpha diversities and correlate with geochemistry
-| |- 4_identify_biomarkers.py 		# identify biomarkers using LefSe and correlate with geochemistry
+| |- 4_EMB_core_microbiome.py 		# determine the EMB core microbiome OTU composition
+| |- 5_identify_biomarkers.py 		# identify biomarkers using LefSe and correlate with geochemistry
 ```
 
 legend:
@@ -32,3 +33,5 @@ legend:
 
 
 **CAUTION:** Due to a bug in mothur v1.39.5 the outputs will vary slightly between each run of any mothur commands. As a result the sequence analysis will produce slightly different results each time. As a result, re-running these particular files as denoted with `SEE BELOW` in the above file structure will produce different final results tables/figures. It is therefore advised to not rerun these files unless absolutely necessary. The outputs of these files are already in the `data/processed/` directory if needed. All other files have fully reproducibly outputs and can be rerun as much as desired.
+
+**NOTE:** Raw sequence files are not included in this repository, but can be obtained from the NCBI's Short Read Archive under accession number `<add_accession_number>`.
