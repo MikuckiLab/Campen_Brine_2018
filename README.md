@@ -14,7 +14,9 @@ Antarctic subglacial environments host microbial ecosystems and are proving to b
 
 It is reccommneded to use the [Anaconda Python3](https://www.anaconda.com/download/) environment to ensure the majority of dependencies for running the code in this repository are met. To install the remaining dependencies run `pip install mothur-py seq-experiment`.
 
-You will also require [mothur](https://github.com/mothur/mothur), (See below for version compatibility issues), and the Silva reference alignment which can be downloaded using the script `0_download_silva.py`. Before doing so ensure you have read to, and agreed to the Silva [Terms of Use/License Agreement](https://www.arb-silva.de/silva-license-information).
+You will also require [mothur](https://github.com/mothur/mothur) (See below for version compatibility issues), and the Silva reference alignment which can be downloaded using the script `0_download_silva.py`. Before doing so ensure you have read to, and agreed to the Silva [Terms of Use/License Agreement](https://www.arb-silva.de/silva-license-information).
+
+You will also need to download the raw sequence files which the NCBI Short Read Archive (SRA) under accession number `<insert_accession_numbers>`, and place them in the `data/raw_seq/` folder.
 
 ---
 
@@ -34,7 +36,7 @@ this_is_outflow
 | |+ silva/				# folder containing downloaded Silva reference files (if downloaded)
 | |+ tmp/				# temporary files created during analysis that can be deleted safely
 |
-|+ results/				# final results tables and figures output from analysis
+|+ results/				# final results tables output from analysis
 |
 |- code/				# folder contianing scripts for sequence processing and data analysis
 | |- 0_download_silva.py  		# download Silva v128 reference files (SEE BELOW)
@@ -52,6 +54,4 @@ legend:
 * `| |-` denotes file/directory is within another directory
 
 
-**CAUTION:** Due to a bug in mothur v1.39.5 (and earlier) the outputs will vary slightly between each run of any mothur commands. This should be resolved in the next release version, or can be avoided by using a build of the `Threads_373` branch of mothur from commit [`1e8aa08`](https://github.com/mothur/mothur/commit/1e8aa085dc33d2d874b9819fc869d6b000eb2ab7) onwards where this bug was fixed. Re-running the files as denoted with `SEE BELOW` in the above file structure with a version of mothur with this bug will produce different final results tables/figures. It is therefore advised to not rerun these files unless absolutely necessary, or without a fixed version of mothur. The outputs of these files are already in the `data/processed/` directory if needed. All other files have fully reproducibly outputs and can be rerun as much as desired.
-
-**NOTE:** Raw sequence files are not included in this repository, but can be obtained from the NCBI's Short Read Archive under accession number `<add_accession_number>`.
+**CAUTION:** Due to a bug in mothur v1.39.5 (and earlier) the outputs will vary slightly between each run of any mothur commands. This should be resolved in the next release version, or can be avoided by using a build of the `Threads_373` branch of mothur from commit [`1e8aa08`](https://github.com/mothur/mothur/commit/1e8aa085dc33d2d874b9819fc869d6b000eb2ab7) onwards where this bug was fixed. Re-running the files as denoted with `SEE BELOW` in the above file structure with a version of mothur with this bug will produce different final results tables/figures. It is therefore advised to not rerun these files unless absolutely necessary, or without a compatible version of mothur. The outputs of these files are already in the `data/processed/` directory if needed. All other files have fully reproducibly outputs and can be rerun as much as desired.
