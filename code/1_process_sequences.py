@@ -70,10 +70,11 @@ m.verbosity = 1
 m.suppress_logfile = True
 m.mothur_seed = 4321
 m.current_dirs['output'] = m.current_dirs['tempdefault'] = mothur_out_dir
+m.mothur_path = os.path.join(base_dir, 'mothur')
 
 # setup other variables for mothur execution
 mothur_vars = {
-    'max_processors': 1,  # the more processors the more memory used
+    'max_processors': 2,  # the more processors the more memory used
     # for make.contigs
     'pdif': 3,
     'oligos_file': os.path.join(data_dir, '515806.oligos'),
