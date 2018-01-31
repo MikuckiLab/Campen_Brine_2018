@@ -72,7 +72,6 @@ m.verbosity = 1
 m.suppress_logfile = True
 m.mothur_seed = 4321
 m.current_dirs['output'] = m.current_dirs['tempdefault'] = mothur_out_dir
-m.mothur_path = os.path.join(base_dir, 'mothur')
 
 #========== Read in Data ==========#
 
