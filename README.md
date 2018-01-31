@@ -1,3 +1,23 @@
+# High resolution characterization of an Antarctic groundwater microbiome: replicate sampling and delineation of subglacial outflow at Blood Falls 
+
+R. Campen, W.B. Lyons, S. Tulaczyk, B. Dachwald, J. Kowalski, E. Pettit, K. A. Welch, J.A. Mikucki
+
+---
+
+### Abstract
+
+Antarctic subglacial environments host microbial ecosystems and are proving to be geochemically and biologically diverse. The Taylor Glacier, Antarctica, periodically expels iron-rich brine through an englacial conduit sourced from a deep subglacial aquifer. The discharged groundwater creates a dramatic red feature on the glacier surface known as Blood Falls. Here we describe the microbial diversity of subglacial fluids collected from this feature over a decade-long time frame. This represents the first replicate sampling of an Antarctic subglacial system, and constitutes the first collection from within an englacial conduit using a novel, minimally invasive thermoelectric melting drill. Our comparative analysis allows for the delineation of a subglacial brine core microbiome that is stable. Previously undetected but abundant groups including the candidate bacterial phylum Atribacteria and the archaeal phylum Pacearchaeota. Many of the core taxa correlated strongly with brine geochemistry. Comparison with samples collected at the glacier surface when discharge was not active and from within its proglacial lake; this enabled the delineation of subsurface samples and provides insight into brine hydrology. The ability to evaluate sample purity will enable future investigations of surface collection of subglacial brine. Our work has implications for deconvoluting subsurface contributions to the composition of brines released from thick ice covers, such as may be encountered on Europa or Enceladus.
+
+---
+
+### Requirements
+
+It is reccommneded to use the [Anaconda Python3](https://www.anaconda.com/download/) environment to ensure the majority of dependencies for running the code in this repository are met. To install the remaining dependencies run `pip install mothur-py seq-experiment`.
+
+You will also require [mothur](https://github.com/mothur/mothur), (See below for version compatibility issues), and the Silva reference alignment which can be downloaded using the script `0_download_silva.py`. Before doing so ensure you have read to, and agreed to the Silva [Terms of Use/License Agreement](https://www.arb-silva.de/silva-license-information).
+
+---
+
 ### Repository layout
 
 ```
