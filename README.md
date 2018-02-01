@@ -1,6 +1,6 @@
 # High resolution characterization of an Antarctic groundwater microbiome: replicate sampling and delineation of subglacial outflow at Blood Falls 
 
-R. Campen, W.B. Lyons, S. Tulaczyk, B. Dachwald, J. Kowalski, E. Pettit, K. A. Welch, J.A. Mikucki
+R. Campen, W.B. Lyons, S. Tulaczyk, B. Dachwald, J. Kowalski, E.C. Pettit, K.A. Welch, J.A. Mikucki
 
 ---
 
@@ -12,7 +12,7 @@ Antarctic subglacial environments host microbial ecosystems and are proving to b
 
 ### Requirements
 
-It is reccommneded to use the [Anaconda Python3](https://www.anaconda.com/download/) environment to ensure the majority of dependencies for running the code in this repository are met. To install the remaining dependencies run `pip install mothur-py seq-experiment`.
+It is recommended to use the [Anaconda Python3](https://www.anaconda.com/download/) environment to ensure the majority of dependencies for running the code in this repository are met. To install the remaining dependencies run `pip install mothur-py seq-experiment`.
 
 You will also require [mothur](https://github.com/mothur/mothur) (See below for version compatibility issues), and the Silva reference alignment which can be downloaded using the script `0_download_silva.py`. Before doing so ensure you have read to, and agreed to the Silva [Terms of Use/License Agreement](https://www.arb-silva.de/silva-license-information).
 
