@@ -1,6 +1,6 @@
-# High resolution characterization of an Antarctic groundwater microbiome: replicate sampling and delineation of subglacial outflow at Blood Falls 
+# Microbial diversity of an Antarctic subglacial community and high-resolution replicate sampling inform hydrological connectivity in a polar desert 
 
-R. Campen, W.B. Lyons, S. Tulaczyk, B. Dachwald, J. Kowalski, E.C. Pettit, K.A. Welch, J.A. Mikucki
+R. Campen, J. Kowalski, W.B. Lyons, S. Tulaczyk, B. Dachwald, E.C. Pettit, K.A. Welch, J.A. Mikucki
 
 ---
 
