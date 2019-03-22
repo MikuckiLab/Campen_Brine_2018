@@ -43,7 +43,7 @@ results_dir = os.path.join(base_dir, 'results')
 #========== Calculate correlations ==========#
 
 def correlate_columns(df, combos=None, round_=3):
-    """Calulcates perasons r and significance for all column combinations in a dataframe."""
+    """Calulcates spearmans rho and significance for all column combinations in a dataframe."""
     
     # get all pairwise combinations to compare id user has not specified
     if combos is None:
