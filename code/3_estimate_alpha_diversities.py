@@ -72,19 +72,20 @@ sxp.metadata['date'] =  pd.to_datetime(sxp.metadata['date'])
 # remove OTUs classified as unknown from the SeqExp
 sxp = sxp.drop(by='features', items=sxp[sxp.classifications['Kingdom'] == 'unknown'].feature_names)
 
-# rename OTUs of Class Chloroplast to Phylum Chloroplast so it is more apparant what they are, 
-# instead of grouping them under cyannobacteria
+# correct some classifications
 new_classifications = sxp.classifications
 for row in sxp.classifications.iterrows():
     feature = row[0]
     data = row[1]
     
-    # fix Chloroplasts
+    # rename OTUs of Class Chloroplast to Phylum Chloroplast so it is more apparant what they are, 
+    # this is instead of grouping them under cyannobacteria as is the default
     if data['Class'] == 'Chloroplast':
         new_classifications.set_value(col='Kingdom', index=feature, value='Chloroplast')
         new_classifications.set_value(col='Phylum', index=feature, value='Chloroplast_ph')
         new_classifications.set_value(col='Class', index=feature, value='Chloroplast_cl')
-        
+    
+    # add the missing taxonomic level information to the Woesearchaeota classifications
     if data['Phylum'] == 'Woesearchaeota_(DHVEG-6)':
         for level in sxp.classifications.columns[2:]:
             new_classifications.set_value(col=level, index=feature, value='Woesearchaeota_(DHVEG-6)_%s' % level.lower()[:2])
@@ -100,6 +101,7 @@ def replace_tax(column, match, replace):
             
     return new_col
 
+# Replace Woesearchaeota classifications with the less specific (but more accurate) DHVEG6 classification
 sxp.classifications.apply(lambda col: replace_tax(col, 'Woesearchaeota_(DHVEG-6)', 'DHVE6'))
 
 # generate prokaryote only subset sequence data
